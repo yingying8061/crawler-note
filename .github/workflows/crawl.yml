@@ -11,11 +11,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 关键：给Actions写仓库的权限
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 拉取完整仓库
+          fetch-depth: 0
+
+      - name: 安装爬虫依赖
+        run: pip install requests beautifulsoup4
 
       - name: 运行爬虫生成笔记
         run: python crawl.py "${{ inputs.lesson_name }}"
@@ -28,4 +31,4 @@ jobs:
           git commit -m "自动生成笔记: ${{ inputs.lesson_name }}" || echo "没有新文件需要提交"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 用GitHub自带的Token授权
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
