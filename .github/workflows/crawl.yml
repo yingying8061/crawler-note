@@ -10,16 +10,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 关键：给Actions写仓库的权限
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 0  # 拉取完整仓库
+
       - name: 运行爬虫生成笔记
         run: python crawl.py "${{ inputs.lesson_name }}"
-      
-      - name: 提交并推送
+
+      - name: 提交并推送笔记
         run: |
           git config --global user.name "yingying8061"
           git config --global user.email "yingying8061@users.noreply.github.com"
           git add .
-          git commit -m "自动生成笔记"
+          git commit -m "自动生成笔记: ${{ inputs.lesson_name }}" || echo "没有新文件需要提交"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 用GitHub自带的Token授权
