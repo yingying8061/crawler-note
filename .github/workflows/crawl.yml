@@ -1,0 +1,25 @@
+name: 生成课文笔记
+on:
+  workflow_dispatch:
+    inputs:
+      lesson_name:
+        description: "输入课文名字"
+        required: true
+        default: "荷花"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: 运行爬虫生成笔记
+        run: python crawl.py "${{ inputs.lesson_name }}"
+      
+      - name: 提交并推送
+        run: |
+          git config --global user.name "yingying8061"
+          git config --global user.email "yingying8061@users.noreply.github.com"
+          git add .
+          git commit -m "自动生成笔记"
+          git push
