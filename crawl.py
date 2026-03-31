@@ -1,11 +1,11 @@
 import sys
-import os
 
 # 获取你输入的课文名字
 lesson = sys.argv[1]
 
-# 自动生成笔记内容
+# 正确的 Markdown 模板（保证换行和分段）
 md_content = f"""# {lesson}
+
 ## 课文资料
 自动收集完成
 
